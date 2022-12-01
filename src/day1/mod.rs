@@ -9,7 +9,7 @@ struct Elf {
 
 impl Elf {
     pub fn sum(&self) -> i32 {
-        return self.calories.to_owned().into_iter().sum();
+        return self.calories.iter().sum();
     }
 }
 
@@ -59,13 +59,14 @@ impl PartialEq for Elf {
         self.calories == other.calories
     }
 }
+
 impl Eq for Elf {}
 
 pub fn run_part_1(file_name: &str) -> i32 {
     let lines = read(file_name).expect("error reading file");
     let elfs = parse(lines);
-    let elf: Elf = elfs.into_iter().max().unwrap();
-    return elf.calories.into_iter().sum();
+    let elf: &Elf = elfs.iter().max().unwrap();
+    return elf.calories.iter().sum();
 }
 
 pub fn run_part_2(file_name: &str) -> i32 {
@@ -75,8 +76,7 @@ pub fn run_part_2(file_name: &str) -> i32 {
     elfs.sort();
     elfs.reverse();
 
-    let top_three_elfs: Vec<Elf> = elfs.into_iter().take(3).collect();
-    return top_three_elfs.into_iter().map(|e: Elf| e.sum()).sum();
+    return elfs.iter().take(3).map(|e: &Elf| e.sum()).sum();
 }
 
 #[cfg(test)]
