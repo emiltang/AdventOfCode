@@ -1,34 +1,49 @@
+use super::util::read;
 use std::cmp::Ord;
 use std::cmp::Ordering;
-use super::util::read;
 
 struct Elf {
+    index: i32,
     calories: Vec<i32>,
 }
+
+impl Elf {
+    pub fn sum(&self) -> i32 {
+        return self.calories.to_owned().into_iter().sum();
+    }
+}
+
 
 fn parse(input: Vec<String>) -> Vec<Elf> {
     let mut buffer: Vec<i32> = Vec::new();
     let mut elfs: Vec<Elf> = Vec::new();
-
+    let mut i = 1;
     for item in input {
         if item == "" {
             let elf = Elf {
+                index: i,
                 calories: buffer.clone(),
             };
             elfs.push(elf);
-            buffer.clear()
+            buffer.clear();
+            i = i + 1;
         } else {
             let int: i32 = item.parse().unwrap();
-            buffer.push(int)
+            buffer.push(int);
         }
     }
+    let elf = Elf {
+        index: i,
+        calories: buffer.clone(),
+    };
+    elfs.push(elf);
     return elfs;
 }
 
 impl Ord for Elf {
     fn cmp(&self, other: &Self) -> Ordering {
-        let a: i32 = self.calories.to_owned().into_iter().sum();
-        let b: i32 = other.calories.to_owned().into_iter().sum();
+        let a: i32 = self.sum();
+        let b: i32 = other.sum();
         return a.cmp(&b);
     }
 }
@@ -46,21 +61,46 @@ impl PartialEq for Elf {
 }
 impl Eq for Elf {}
 
-fn analyse(elfs: Vec<Elf>) -> i32 {
+pub fn run_part_1(file_name: &str) -> i32 {
+    let lines = read(file_name).expect("error reading file");
+    let elfs = parse(lines);
     let elf: Elf = elfs.into_iter().max().unwrap();
     return elf.calories.into_iter().sum();
 }
 
-pub fn test() {
-    let file_name = "src/day1/test";
+pub fn run_part_2(file_name: &str) -> i32 {
     let lines = read(file_name).expect("error reading file");
-    let elfs = parse(lines);
-    println!("{}", analyse(elfs))
+    let mut elfs = parse(lines);
+
+    elfs.sort();
+    elfs.reverse();
+
+    let top_three_elfs: Vec<Elf> = elfs.into_iter().take(3).collect();
+    return top_three_elfs.into_iter().map(|e: Elf| e.sum()).sum();
 }
 
-pub fn run() {
-    let file_name = "src/day1/input";
-    let lines = read(file_name).expect("error reading file");
-    let elfs = parse(lines);
-    println!("{}", analyse(elfs))
+#[cfg(test)]
+mod tests {
+    use super::run_part_1;
+    use super::run_part_2;
+
+    #[test]
+    fn part_1_small_set() {
+        assert_eq!(24000, run_part_1("src/day1/test"))
+    }
+
+    #[test]
+    fn part_1_large_set() {
+        assert_eq!(71023, run_part_1("src/day1/input"))
+    }
+
+    #[test]
+    fn part_2_small_set() {
+        assert_eq!(45000, run_part_2("src/day1/test"))
+    }
+
+    #[test]
+    fn part_2_large_set() {
+        assert_eq!(206289, run_part_2("src/day1/input"))
+    }
 }
