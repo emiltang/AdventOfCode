@@ -1,10 +1,44 @@
+use std::cmp::Ordering;
+
 use super::util::read;
 
 #[derive(PartialEq, Eq)]
 enum Command {
-    Rock,
-    Paper,
-    Scissor,
+    Rock = 1,
+    Paper = 2,
+    Scissor = 3,
+}
+
+impl Command {
+    fn score(&self) -> i32 {
+        return match self {
+            Command::Rock => 1,
+            Command::Paper => 2,
+            Command::Scissor => 3,
+        };
+    }
+}
+
+impl Ord for Command {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match (self, other) {
+            (Command::Rock, Command::Rock) => Ordering::Equal,
+            (Command::Paper, Command::Paper) => Ordering::Equal,
+            (Command::Scissor, Command::Scissor) => Ordering::Equal,
+            (Command::Scissor, Command::Rock) => Ordering::Greater,
+            (Command::Rock, Command::Paper) => Ordering::Greater,
+            (Command::Paper, Command::Scissor) => Ordering::Greater,
+            (Command::Rock, Command::Scissor) => Ordering::Less,
+            (Command::Paper, Command::Rock) => Ordering::Less,
+            (Command::Scissor, Command::Paper) => Ordering::Less,
+        }
+    }
+}
+
+impl PartialOrd for Command {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
 }
 
 struct Round {
@@ -12,43 +46,22 @@ struct Round {
     player: Command,
 }
 
-fn match_elf_strategy(s: &str) -> Command {
+impl Round {
+    fn play(&self) -> i32 {
+        return match self.elf.cmp(&self.player) {
+            Ordering::Equal => self.player.score() + 3,
+            Ordering::Greater => self.player.score() + 6,
+            Ordering::Less => self.player.score(),
+        };
+    }
+}
+
+fn parse_command(s: &str) -> Command {
     return match s {
-        "A" => Command::Rock,
-        "B" => Command::Paper,
-        "C" => Command::Scissor,
+        "X" | "A" => Command::Rock,
+        "Y" | "B" => Command::Paper,
+        "Z" | "C" => Command::Scissor,
         _ => panic!("Invalid input"),
-    };
-}
-
-fn match_player_strategy(s: &str) -> Command {
-    return match s {
-        "X" => Command::Rock,
-        "Y" => Command::Paper,
-        "Z" => Command::Scissor,
-        _ => panic!("Invalid input"),
-    };
-}
-
-fn score(c: &Command) -> i32 {
-    return match c {
-        Command::Rock => 1,
-        Command::Paper => 2,
-        Command::Scissor => 3,
-        _ => panic!("Invalid input"),
-    };
-}
-
-fn play(elf: &Command, player: &Command) -> i32 {
-    return match (elf, player) {
-        _ if elf == player => score(player) + 3,
-        (Command::Scissor, Command::Rock) => score(player) + 6,
-        (Command::Rock, Command::Paper) => score(player) + 6,
-        (Command::Paper, Command::Scissor) => score(player) + 6,
-        (Command::Rock, Command::Scissor) => score(player),
-        (Command::Paper, Command::Rock) => score(player),
-        (Command::Scissor, Command::Paper) => score(player),
-        _ => 0,
     };
 }
 
@@ -58,8 +71,8 @@ fn parse(lines: &Vec<String>) -> Vec<Round> {
     for line in lines {
         let elem: Vec<&str> = line.split_ascii_whitespace().collect();
         let tuple = Round {
-            elf: match_elf_strategy(elem[0]),
-            player: match_player_strategy(elem[1]),
+            elf: parse_command(elem[0]),
+            player: parse_command(elem[1]),
         };
         commands.push(tuple)
     }
@@ -69,12 +82,7 @@ fn parse(lines: &Vec<String>) -> Vec<Round> {
 fn calc_score(file_name: &str) -> i32 {
     let lines = read(file_name).expect("File read error");
     let commands = parse(&lines);
-    let mut sum = 0;
-    for Round { elf: e, player: p } in commands {
-        let result = play(&e, &p);
-        sum = sum + result;
-    }
-    return sum;
+    return commands.iter().map(|r| r.play()).sum();
 }
 
 #[cfg(test)]
