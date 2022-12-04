@@ -4,25 +4,19 @@ use crate::util::read;
 
 #[derive(Debug, PartialEq)]
 struct Rucksack {
-    index: u32,
     compartmen_one: Vec<char>,
     compartmen_two: Vec<char>,
 }
 
 impl Rucksack {
     fn parse_vec(input: &Vec<String>) -> Vec<Rucksack> {
-        return input
-            .iter()
-            .enumerate()
-            .map(|(i, s)| Rucksack::parse(s, i))
-            .collect();
+        return input.iter().map(|s| Rucksack::parse(s)).collect();
     }
 
-    fn parse(input: &String, i: usize) -> Rucksack {
+    fn parse(input: &String) -> Rucksack {
         let first = &input[..input.len() / 2];
         let second = &input[input.len() / 2..input.len()];
         return Rucksack {
-            index: i as u32,
             compartmen_one: first.chars().collect(),
             compartmen_two: second.chars().collect(),
         };
@@ -90,10 +84,8 @@ impl RucksackGroup {
         let mut groups: Vec<RucksackGroup> = Vec::new();
         let mut stack: Vec<Rucksack> = Vec::new();
 
-        let i = 0;
-
         for line in input {
-            let r = Rucksack::parse(line, i);
+            let r = Rucksack::parse(line);
             stack.push(r);
         }
 
@@ -163,11 +155,10 @@ mod tests {
     fn test_parse_rucksack() {
         let s = String::from("vJrwpWtwJgWrhcsFMMfFFhFp");
         let rucksack = Rucksack {
-            index: 1,
             compartmen_one: vec!['v', 'J', 'r', 'w', 'p', 'W', 't', 'w', 'J', 'g', 'W', 'r'],
             compartmen_two: vec!['h', 'c', 's', 'F', 'M', 'M', 'f', 'F', 'F', 'h', 'F', 'p'],
         };
-        assert_eq!(rucksack, Rucksack::parse(&s, 1))
+        assert_eq!(rucksack, Rucksack::parse(&s))
     }
 
     #[test]
