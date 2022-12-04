@@ -1,7 +1,9 @@
 mod day1;
 mod day2;
+mod day3;
+
 mod util;
 
 fn main() {
-    day1::run_part_1("src/day1/test");
+    day2::part_two("src/day2/test");
 }
