@@ -14,8 +14,7 @@ impl Rucksack {
     }
 
     fn parse(input: &String) -> Rucksack {
-        let first = &input[..input.len() / 2];
-        let second = &input[input.len() / 2..input.len()];
+        let (first, second) = input.split_at(input.len() / 2);
         return Rucksack {
             compartment_one: first.chars().collect(),
             compartment_two: second.chars().collect(),
