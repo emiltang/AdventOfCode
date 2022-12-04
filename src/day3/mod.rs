@@ -4,8 +4,8 @@ use crate::util::read;
 
 #[derive(Debug, PartialEq)]
 struct Rucksack {
-    compartmen_one: Vec<char>,
-    compartmen_two: Vec<char>,
+    compartment_one: Vec<char>,
+    compartment_two: Vec<char>,
 }
 
 impl Rucksack {
@@ -17,22 +17,22 @@ impl Rucksack {
         let first = &input[..input.len() / 2];
         let second = &input[input.len() / 2..input.len()];
         return Rucksack {
-            compartmen_one: first.chars().collect(),
-            compartmen_two: second.chars().collect(),
+            compartment_one: first.chars().collect(),
+            compartment_two: second.chars().collect(),
         };
     }
 
     fn common_priority_sum(&self) -> i32 {
-        let common_priorities = common_priorities(&self.compartmen_one, &self.compartmen_two);
+        let common_priorities = common_priorities(&self.compartment_one, &self.compartment_two);
         return common_priorities.iter().map(|c| c.priority()).sum();
     }
 
     fn elements(&self) -> Vec<char> {
         return self
-            .compartmen_one
+            .compartment_one
             .iter()
             .copied()
-            .chain(self.compartmen_two.iter().copied())
+            .chain(self.compartment_two.iter().copied())
             .collect();
     }
 }
@@ -155,8 +155,8 @@ mod tests {
     fn test_parse_rucksack() {
         let s = String::from("vJrwpWtwJgWrhcsFMMfFFhFp");
         let rucksack = Rucksack {
-            compartmen_one: vec!['v', 'J', 'r', 'w', 'p', 'W', 't', 'w', 'J', 'g', 'W', 'r'],
-            compartmen_two: vec!['h', 'c', 's', 'F', 'M', 'M', 'f', 'F', 'F', 'h', 'F', 'p'],
+            compartment_one: vec!['v', 'J', 'r', 'w', 'p', 'W', 't', 'w', 'J', 'g', 'W', 'r'],
+            compartment_two: vec!['h', 'c', 's', 'F', 'M', 'M', 'f', 'F', 'F', 'h', 'F', 'p'],
         };
         assert_eq!(rucksack, Rucksack::parse(&s))
     }
