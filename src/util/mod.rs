@@ -4,8 +4,8 @@ use std::io::Result;
 
 
 
-pub fn read(file_name: &str) -> Result<Vec<String>> {
-    let file = File::open(file_name)?;
+pub fn read(file_name: &str) -> Vec<String>{
+    let file = File::open(file_name).expect("Error reading file");
     let buffer = BufReader::new(file);
-    return buffer.lines().collect();
+    return buffer.lines().map(|s| s.unwrap()).collect();
 }

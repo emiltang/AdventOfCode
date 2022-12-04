@@ -1,6 +1,5 @@
 use std::cmp::Ordering;
-
-use super::util::read;
+use crate::util;
 
 #[derive(PartialEq, Eq)]
 enum Gesture {
@@ -143,13 +142,13 @@ impl RoundTwo {
 }
 
 pub fn calc_score(file_name: &str) -> i32 {
-    let lines = read(file_name).expect("File read error");
+    let lines = util::read(file_name);
     let rounds = RoundOne::parse(&lines);
     return rounds.iter().map(|r| r.play()).sum();
 }
 
 pub fn part_two(file_name: &str) -> i32 {
-    let lines = read(file_name).expect("File read error");
+    let lines = util::read(file_name);
     let rounds = RoundTwo::parse(&lines);
     return rounds.iter().map(|r| r.play()).sum();
 }

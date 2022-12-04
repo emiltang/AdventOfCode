@@ -1,4 +1,4 @@
-use super::util::read;
+use crate::util;
 use std::cmp::Ord;
 use std::cmp::Ordering;
 
@@ -12,7 +12,6 @@ impl Elf {
         return self.calories.iter().sum();
     }
 }
-
 
 fn parse(input: Vec<String>) -> Vec<Elf> {
     let mut buffer: Vec<i32> = Vec::new();
@@ -63,14 +62,14 @@ impl PartialEq for Elf {
 impl Eq for Elf {}
 
 pub fn run_part_1(file_name: &str) -> i32 {
-    let lines = read(file_name).expect("error reading file");
+    let lines = util::read(file_name);
     let elfs = parse(lines);
     let elf: &Elf = elfs.iter().max().unwrap();
     return elf.calories.iter().sum();
 }
 
 pub fn run_part_2(file_name: &str) -> i32 {
-    let lines = read(file_name).expect("error reading file");
+    let lines = util::read(file_name);
     let mut elfs = parse(lines);
 
     elfs.sort();

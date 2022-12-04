@@ -112,7 +112,7 @@ impl RucksackGroup {
 
 /// Part 1
 fn sum_of_priorities(file_name: &str) -> i32 {
-    let input = util::read(file_name).expect("error reading file");
+    let input = util::read(file_name);
     let rucksacks: Vec<Rucksack> = Rucksack::parse_vec(&input);
     return rucksacks
         .iter()
@@ -122,7 +122,7 @@ fn sum_of_priorities(file_name: &str) -> i32 {
 
 /// Part 2
 fn sum_of_badges(file_name: &str) -> i32 {
-    let input = util::read(file_name).expect("error reading file");
+    let input = util::read(file_name);
     let groups: Vec<RucksackGroup> = RucksackGroup::parse(&input);
     return groups.iter().map(|group| group.badge().priority()).sum();
 }
