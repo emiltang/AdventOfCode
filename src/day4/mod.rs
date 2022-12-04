@@ -1,7 +1,7 @@
-use std::f32::consts::E;
+use std::ops::Range;
 
 #[derive(Debug, PartialEq)]
-struct Elf(std::ops::Range<i32>);
+struct Elf(Range<i32>);
 
 impl Elf {
     fn overlap<'a>(a: &'a Elf, b: &'a Elf) -> Option<&'a Elf> {
