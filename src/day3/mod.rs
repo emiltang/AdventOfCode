@@ -65,12 +65,6 @@ fn common_priorities_three(a: &Vec<char>, b: &Vec<char>, c: &Vec<char>) -> Vec<c
         .collect();
 }
 
-fn sum_of_priorities(file_name: &str) -> i32 {
-    let input = read(file_name).expect("error reading file");
-    let rucksacks: Vec<Rucksack> = Rucksack::parse_vec(&input);
-    return rucksacks.iter().map(|sack| sack.common_priority_sum()).sum();
-}
-
 trait Priority {
     fn priority(&self) -> i32;
 }
@@ -125,7 +119,17 @@ impl RucksackGroup {
     }
 }
 
+/// Part 1
+fn sum_of_priorities(file_name: &str) -> i32 {
+    let input = read(file_name).expect("error reading file");
+    let rucksacks: Vec<Rucksack> = Rucksack::parse_vec(&input);
+    return rucksacks
+        .iter()
+        .map(|sack| sack.common_priority_sum())
+        .sum();
+}
 
+/// Part 2
 fn sum_of_badges(file_name: &str) -> i32 {
     let input = read(file_name).expect("error reading file");
     let groups: Vec<RucksackGroup> = RucksackGroup::parse(&input);
@@ -134,7 +138,7 @@ fn sum_of_badges(file_name: &str) -> i32 {
 
 #[cfg(test)]
 mod tests {
-    use super::{common_priorities, sum_of_priorities, Priority, Rucksack, sum_of_badges};
+    use super::{common_priorities, sum_of_badges, sum_of_priorities, Priority, Rucksack};
 
     #[test]
     fn test_priority_a() {
@@ -186,7 +190,6 @@ mod tests {
     fn test_part_1_real() {
         assert_eq!(7990, sum_of_priorities("src/day3/input"))
     }
-
 
     #[test]
     fn test_part_2() {
