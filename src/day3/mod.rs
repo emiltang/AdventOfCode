@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::util::read;
 
 #[derive(Debug, PartialEq)]
@@ -26,23 +28,47 @@ impl Rucksack {
         };
     }
 
-    fn calc_priority(&self) -> i32 {
+    fn common_priority_sum(&self) -> i32 {
         let common_priorities = common_priorities(&self.compartmen_one, &self.compartmen_two);
         return common_priorities.iter().map(|c| c.priority()).sum();
+    }
+
+    fn elements(&self) -> Vec<char> {
+        return self
+            .compartmen_one
+            .iter()
+            .copied()
+            .chain(self.compartmen_two.iter().copied())
+            .collect();
     }
 }
 
 fn common_priorities(a: &Vec<char>, b: &Vec<char>) -> Vec<char> {
-    let mut vec: Vec<char> = a.iter().filter(|c| b.contains(c)).map(|c| *c).collect();
+    let mut vec: Vec<char> = a
+        .into_iter()
+        .filter(|c| b.contains(c))
+        .map(|c| *c)
+        .collect();
     vec.sort();
     vec.dedup();
     return vec;
 }
 
+fn common_priorities_three(a: &Vec<char>, b: &Vec<char>, c: &Vec<char>) -> Vec<char> {
+    let a_set: HashSet<char> = HashSet::from_iter(a.clone());
+    let b_set: HashSet<char> = HashSet::from_iter(b.clone());
+    let c_set: HashSet<char> = HashSet::from_iter(c.clone());
+
+    return a_set
+        .into_iter()
+        .filter(|d| b_set.contains(d) && c_set.contains(d))
+        .collect();
+}
+
 fn sum_of_priorities(file_name: &str) -> i32 {
     let input = read(file_name).expect("error reading file");
     let rucksacks: Vec<Rucksack> = Rucksack::parse_vec(&input);
-    return rucksacks.iter().map(|r| r.calc_priority()).sum();
+    return rucksacks.iter().map(|sack| sack.common_priority_sum()).sum();
 }
 
 trait Priority {
@@ -59,9 +85,56 @@ impl Priority for char {
     }
 }
 
+struct RucksackGroup {
+    one: Rucksack,
+    two: Rucksack,
+    three: Rucksack,
+}
+
+impl RucksackGroup {
+    fn parse(input: &Vec<String>) -> Vec<RucksackGroup> {
+        let mut groups: Vec<RucksackGroup> = Vec::new();
+        let mut stack: Vec<Rucksack> = Vec::new();
+
+        let i = 0;
+
+        for line in input {
+            let r = Rucksack::parse(line, i);
+            stack.push(r);
+        }
+
+        while stack.len() >= 3 {
+            let group = RucksackGroup {
+                one: stack.pop().unwrap(),
+                two: stack.pop().unwrap(),
+                three: stack.pop().unwrap(),
+            };
+            groups.push(group);
+        }
+
+        return groups;
+    }
+
+    fn badge(&self) -> char {
+        let common = common_priorities_three(
+            &self.one.elements(),
+            &self.two.elements(),
+            &self.three.elements(),
+        );
+        return *common.first().expect("Vector empty");
+    }
+}
+
+
+fn sum_of_badges(file_name: &str) -> i32 {
+    let input = read(file_name).expect("error reading file");
+    let groups: Vec<RucksackGroup> = RucksackGroup::parse(&input);
+    return groups.iter().map(|group| group.badge().priority()).sum();
+}
+
 #[cfg(test)]
 mod tests {
-    use super::{common_priorities, sum_of_priorities, Priority, Rucksack};
+    use super::{common_priorities, sum_of_priorities, Priority, Rucksack, sum_of_badges};
 
     #[test]
     fn test_priority_a() {
@@ -112,5 +185,16 @@ mod tests {
     #[test]
     fn test_part_1_real() {
         assert_eq!(7990, sum_of_priorities("src/day3/input"))
+    }
+
+
+    #[test]
+    fn test_part_2() {
+        assert_eq!(70, sum_of_badges("src/day3/test"))
+    }
+
+    #[test]
+    fn test_part_2_real() {
+        assert_eq!(2602, sum_of_badges("src/day3/input"))
     }
 }
