@@ -1,9 +1,9 @@
-use crate::util;
 use std::cmp::Ord;
 use std::cmp::Ordering;
 
+use crate::util;
+
 struct Elf {
-    index: i32,
     calories: Vec<i32>,
 }
 
@@ -16,34 +16,30 @@ impl Elf {
 fn parse(input: Vec<String>) -> Vec<Elf> {
     let mut buffer: Vec<i32> = Vec::new();
     let mut elfs: Vec<Elf> = Vec::new();
-    let mut i = 1;
     for item in input {
-        if item == "" {
+        if item.is_empty() {
             let elf = Elf {
-                index: i,
                 calories: buffer.clone(),
             };
             elfs.push(elf);
             buffer.clear();
-            i = i + 1;
         } else {
             let int: i32 = item.parse().unwrap();
             buffer.push(int);
         }
     }
     let elf = Elf {
-        index: i,
         calories: buffer.clone(),
     };
     elfs.push(elf);
-    return elfs;
+    elfs
 }
 
 impl Ord for Elf {
     fn cmp(&self, other: &Self) -> Ordering {
         let a: i32 = self.sum();
         let b: i32 = other.sum();
-        return a.cmp(&b);
+        a.cmp(&b)
     }
 }
 

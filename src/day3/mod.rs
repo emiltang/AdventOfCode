@@ -9,11 +9,11 @@ struct Rucksack {
 }
 
 impl Rucksack {
-    fn parse_vec(input: &Vec<String>) -> Vec<Rucksack> {
+    fn parse_vec(input: &[String]) -> Vec<Rucksack> {
         return input.iter().map(|s| Rucksack::parse(s)).collect();
     }
 
-    fn parse(input: &String) -> Rucksack {
+    fn parse(input: &str) -> Rucksack {
         let (first, second) = input.split_at(input.len() / 2);
         return Rucksack {
             compartment_one: first.chars().collect(),
@@ -36,26 +36,29 @@ impl Rucksack {
     }
 }
 
-fn common_priorities(a: &Vec<char>, b: &Vec<char>) -> Vec<char> {
+fn common_priorities(a: &[char], b: &[char]) -> Vec<char> {
     let mut vec: Vec<char> = a
-        .into_iter()
-        .filter(|c| b.contains(c))
-        .map(|c| *c)
+        .iter()
+        .filter(|c| b.contains(c)).copied()
         .collect();
     vec.sort();
     vec.dedup();
-    return vec;
+    vec
 }
 
-fn common_priorities_three(a: &Vec<char>, b: &Vec<char>, c: &Vec<char>) -> Vec<char> {
+fn common_priorities_three(
+    a: &Vec<char>,
+    b: &Vec<char>,
+    c: &Vec<char>,
+) -> Vec<char> {
     let a_set: HashSet<char> = HashSet::from_iter(a.clone());
     let b_set: HashSet<char> = HashSet::from_iter(b.clone());
     let c_set: HashSet<char> = HashSet::from_iter(c.clone());
 
-    return a_set
+    a_set
         .into_iter()
         .filter(|d| b_set.contains(d) && c_set.contains(d))
-        .collect();
+        .collect()
 }
 
 trait Priority {
@@ -64,11 +67,11 @@ trait Priority {
 
 impl Priority for char {
     fn priority(&self) -> i32 {
-        return match self {
+        match self {
             lower if char::is_ascii_lowercase(lower) => (*lower as i32) - 96,
             upper if char::is_ascii_uppercase(upper) => (*upper as i32) - 38,
             _ => panic!("invalid input"),
-        };
+        }
     }
 }
 
@@ -97,7 +100,7 @@ impl RucksackGroup {
             groups.push(group);
         }
 
-        return groups;
+        groups
     }
 
     fn badge(&self) -> char {
@@ -129,7 +132,7 @@ fn sum_of_badges(file_name: &str) -> i32 {
 
 #[cfg(test)]
 mod tests {
-    use super::{common_priorities, sum_of_badges, sum_of_priorities, Priority, Rucksack};
+    use super::{common_priorities, Priority, Rucksack, sum_of_badges, sum_of_priorities};
 
     #[test]
     fn test_priority_a() {
@@ -145,6 +148,7 @@ mod tests {
     fn test_priority_A() {
         assert_eq!(27, 'A'.priority())
     }
+
     #[test]
     fn test_priority_Z() {
         assert_eq!(52, 'Z'.priority())
@@ -165,8 +169,8 @@ mod tests {
         assert_eq!(
             vec!['p'],
             common_priorities(
-                &vec!['v', 'J', 'r', 'w', 'p', 'W', 't', 'w', 'J', 'g', 'W', 'r'],
-                &vec!['h', 'c', 's', 'F', 'M', 'M', 'f', 'F', 'F', 'h', 'F', 'p']
+                &['v', 'J', 'r', 'w', 'p', 'W', 't', 'w', 'J', 'g', 'W', 'r'],
+                &['h', 'c', 's', 'F', 'M', 'M', 'f', 'F', 'F', 'h', 'F', 'p'],
             )
         )
     }

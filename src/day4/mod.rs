@@ -24,7 +24,7 @@ struct Pair {
 }
 
 impl Pair {
-    fn parse(s: &String) -> Pair {
+    fn parse(s: &str) -> Pair {
         let x: Vec<&str> = s.split(&[',', '-']).collect();
 
         let a: i32 = x[0].parse().unwrap();
@@ -38,7 +38,7 @@ impl Pair {
         }
     }
 
-    fn parse_vec(input: &Vec<String>) -> Vec<Pair> {
+    fn parse_vec(input: &[String]) -> Vec<Pair> {
         input.iter().map(|s| Pair::parse(s)).collect()
     }
 
@@ -46,11 +46,11 @@ impl Pair {
         return Elf::overlap_complete(&self.first, &self.second).is_some();
     }
 
-    fn overlapping_pairs(pairs: &Vec<Pair>) -> Vec<&Pair> {
+    fn overlapping_pairs(pairs: &[Pair]) -> Vec<&Pair> {
         pairs.iter().filter(|p| p.is_overlapping()).collect()
     }
 
-    fn partial_overlapping_pairs(pairs: &Vec<Pair>) -> Vec<&Pair> {
+    fn partial_overlapping_pairs(pairs: &[Pair]) -> Vec<&Pair> {
         return pairs
             .iter()
             .filter(|p| Elf::overlap_partial(&p.first, &p.second))
@@ -60,7 +60,6 @@ impl Pair {
 
 #[cfg(test)]
 mod tests {
-
     use crate::util;
 
     use super::{Elf, Pair};

@@ -1,4 +1,5 @@
 use std::cmp::Ordering;
+
 use crate::util;
 
 #[derive(PartialEq, Eq)]
@@ -10,20 +11,20 @@ enum Gesture {
 
 impl Gesture {
     fn score(&self) -> i32 {
-        return match self {
+        match self {
             Gesture::Rock => 1,
             Gesture::Paper => 2,
             Gesture::Scissor => 3,
-        };
+        }
     }
 
     pub fn parse(s: &str) -> Gesture {
-        return match s {
+        match s {
             "X" | "A" => Gesture::Rock,
             "Y" | "B" => Gesture::Paper,
             "Z" | "C" => Gesture::Scissor,
             _ => panic!("Invalid input"),
-        };
+        }
     }
 }
 
@@ -57,20 +58,20 @@ enum Outcome {
 
 impl Outcome {
     fn score(&self) -> i32 {
-        return match self {
+        match self {
             Outcome::Win => 6,
             Outcome::Draw => 3,
             Outcome::Loose => 0,
-        };
+        }
     }
 
     fn parse(s: &str) -> Outcome {
-        return match s {
+        match s {
             "X" | "A" => Outcome::Loose,
             "Y" | "B" => Outcome::Draw,
             "Z" | "C" => Outcome::Win,
             _ => panic!("Invalid input"),
-        };
+        }
     }
 }
 
@@ -81,11 +82,11 @@ struct RoundOne {
 
 impl RoundOne {
     fn play(&self) -> i32 {
-        return match self.elf.cmp(&self.player) {
+        match self.elf.cmp(&self.player) {
             Ordering::Equal => self.player.score() + Outcome::Draw.score(),
             Ordering::Greater => self.player.score() + Outcome::Win.score(),
             Ordering::Less => self.player.score() + Outcome::Loose.score(),
-        };
+        }
     }
 
     fn parse(lines: &Vec<String>) -> Vec<RoundOne> {
@@ -99,7 +100,7 @@ impl RoundOne {
             };
             commands.push(tuple)
         }
-        return commands;
+        commands
     }
 }
 
@@ -110,8 +111,8 @@ struct RoundTwo {
 
 impl RoundTwo {
     fn choose_counter(&self) -> Gesture {
-        return match (&self.elf, &self.outcome) {
-            (Gesture::Rock, Outcome::Win) =>  Gesture::Paper,
+        match (&self.elf, &self.outcome) {
+            (Gesture::Rock, Outcome::Win) => Gesture::Paper,
             (Gesture::Rock, Outcome::Draw) => Gesture::Rock,
             (Gesture::Rock, Outcome::Loose) => Gesture::Scissor,
             (Gesture::Paper, Outcome::Win) => Gesture::Scissor,
@@ -120,14 +121,14 @@ impl RoundTwo {
             (Gesture::Scissor, Outcome::Win) => Gesture::Rock,
             (Gesture::Scissor, Outcome::Draw) => Gesture::Scissor,
             (Gesture::Scissor, Outcome::Loose) => Gesture::Paper,
-        };
+        }
     }
 
     fn play(&self) -> i32 {
         return self.choose_counter().score() + self.outcome.score();
     }
 
-    fn parse(lines: &Vec<String>) -> Vec<RoundTwo> {
+    fn parse(lines: &[String]) -> Vec<RoundTwo> {
         return lines
             .iter()
             .map(|line| {
