@@ -47,17 +47,18 @@ fn common_priorities(a: &[char], b: &[char]) -> Vec<char> {
 }
 
 fn common_priorities_three(
-    a: &Vec<char>,
-    b: &Vec<char>,
-    c: &Vec<char>,
+    a: &[char],
+    b: &[char],
+    c: &[char],
 ) -> Vec<char> {
-    let a_set: HashSet<char> = HashSet::from_iter(a.clone());
-    let b_set: HashSet<char> = HashSet::from_iter(b.clone());
-    let c_set: HashSet<char> = HashSet::from_iter(c.clone());
+    // let a_set: HashSet<char> = HashSet::from_iter(a.clone());
+    // let b_set: HashSet<char> = HashSet::from_iter(b.clone());
+    // let c_set: HashSet<char> = HashSet::from_iter(c.clone());
 
-    a_set
+    a
         .into_iter()
-        .filter(|d| b_set.contains(d) && c_set.contains(d))
+        .filter(|d| b.contains(d) && c.contains(d))
+        .copied()
         .collect()
 }
 
@@ -109,7 +110,9 @@ impl RucksackGroup {
             &self.two.elements(),
             &self.three.elements(),
         );
-        return *common.first().expect("Vector empty");
+        if let Some(c) = common.first() {
+            *c
+        } else { !panic!("List empty") }
     }
 }
 
@@ -145,12 +148,12 @@ mod tests {
     }
 
     #[test]
-    fn test_priority_A() {
+    fn test_priority_a_upper() {
         assert_eq!(27, 'A'.priority())
     }
 
     #[test]
-    fn test_priority_Z() {
+    fn test_priority_z_upper() {
         assert_eq!(52, 'Z'.priority())
     }
 
