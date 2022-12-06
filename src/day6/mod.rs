@@ -4,7 +4,6 @@ type Signal = Vec<char>;
 
 trait ISignal {
     fn parse(input: &[String]) -> Signal;
-    fn unique(slice: &[char]) -> bool;
     fn find_marker(&self, distinct_chars: i32) -> Option<i32>;
 }
 
@@ -19,16 +18,13 @@ impl ISignal for Signal {
             return None;
         }
         for current in offset..self.len() {
-            if Signal::unique(&self[current - offset..=current]) {
+            if self[current - offset..=current].iter().all_unique() {
                 return Some(current as i32 + 1);
             }
         }
         None
     }
 
-    fn unique(slice: &[char]) -> bool {
-        itertools::equal(slice.iter(), slice.iter().unique())
-    }
 }
 
 #[cfg(test)]
