@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+
 
 use crate::util;
 
@@ -56,7 +56,7 @@ fn common_priorities_three(
     // let c_set: HashSet<char> = HashSet::from_iter(c.clone());
 
     a
-        .into_iter()
+        .iter()
         .filter(|d| b.contains(d) && c.contains(d))
         .copied()
         .collect()

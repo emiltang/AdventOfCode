@@ -125,7 +125,7 @@ impl RoundTwo {
     }
 
     fn play(&self) -> i32 {
-        return self.choose_counter().score() + self.outcome.score();
+        self.choose_counter().score() + self.outcome.score()
     }
 
     fn parse(lines: &[String]) -> Vec<RoundTwo> {

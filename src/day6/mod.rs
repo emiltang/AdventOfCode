@@ -39,7 +39,7 @@ mod tests {
 
     fn setup(file_name: &str) -> Signal {
         let input = util::read(file_name);
-        return Signal::parse(&input);
+        Signal::parse(&input)
     }
 
     #[test]

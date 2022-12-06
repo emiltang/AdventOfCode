@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashMap, hash::Hash};
+use std::{collections::HashMap};
 
 use crate::util;
 
@@ -65,7 +65,7 @@ fn stack_size(input: &[String]) -> usize {
                as usize;
            }
        }
-       return 0;
+       0
 }
 
 // fn init_vec_stack(input: &[String]) -> Stack {
