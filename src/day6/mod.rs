@@ -10,7 +10,7 @@ trait ISignal {
 
 impl ISignal for Signal {
     fn parse(input: &[String]) -> Signal {
-        return input[0].chars().collect();
+        input[0].chars().collect()
     }
 
     fn find_marker(&self, distinct_chars: i32) -> Option<i32> {
@@ -27,7 +27,7 @@ impl ISignal for Signal {
     }
 
     fn unique(slice: &[char]) -> bool {
-        return itertools::equal(slice.iter(), slice.iter().unique());
+        itertools::equal(slice.iter(), slice.iter().unique())
     }
 }
 
