@@ -1,4 +1,4 @@
-use std::{collections::HashMap};
+use std::collections::HashMap;
 
 use crate::util;
 
@@ -21,6 +21,7 @@ impl Move {
         Move { amount, from, to }
     }
 }
+
 type Stack = HashMap<i32, Vec<Crate>>;
 
 trait IStack {
@@ -34,7 +35,6 @@ impl IStack for Stack {
         let to = &mut self.get_mut(&r#move.to).unwrap();
         to.append(&mut to_move);
     }
-
 }
 
 fn apply(map: &mut Stack, r#move: &Move) {
@@ -53,19 +53,19 @@ fn init(input: &[String]) -> Vec<Move> {
 }
 
 fn stack_size(input: &[String]) -> usize {
-       for line in input  {
-           if line.starts_with(" 1") {
-               return line
-               .trim()
-               .               chars()
-               .               last()
-               .unwrap()
-               .to_digit(10)
-               .unwrap() 
-               as usize;
-           }
-       }
-       0
+    for line in input {
+        if line.starts_with(" 1") {
+            return line
+                .trim()
+                .chars()
+                .last()
+                .unwrap()
+                .to_digit(10)
+                .unwrap()
+                as usize;
+        }
+    }
+    0
 }
 
 // fn init_vec_stack(input: &[String]) -> Stack {
@@ -84,7 +84,6 @@ fn run() {
     let mut map: Stack = HashMap::new();
 
     for r#move in moves {
-
         map.apply(&r#move);
         apply(&mut map, &r#move);
     }

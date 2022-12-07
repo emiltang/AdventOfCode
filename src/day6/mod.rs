@@ -24,7 +24,6 @@ impl ISignal for Signal {
         }
         None
     }
-
 }
 
 #[cfg(test)]
