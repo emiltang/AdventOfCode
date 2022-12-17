@@ -9,5 +9,5 @@ mod day8;
 mod util;
 
 fn main() {
-    day2::part_two("src/day2/test");
+    day14::print_filled("src/day14/test");
 }
